@@ -53,6 +53,16 @@ CREW = [
                 'mentioning the single most important thing today. "alert": false.',
     },
     {
+        "key": "poopybutthole", "id": "crewPoopyButt001", "emoji": "⭐", "title": "Mr. Poopybutthole · GitHub check",
+        "model": "llama3.2:3b", "cron": "0 19 * * *", "speak": False, "always_alert": False,
+        "persona": "You are Mr. Poopybutthole from Rick and Morty: Rabbid's endlessly loyal, upbeat friend (\"Ooo-wee!\"), "
+                   "now his GitHub hype man. You want Rabbid's GitHub to look bad-ass.",
+        "task": '"report": 2-3 sentences on Rabbid\'s GitHub: the numbers (repos, stars, followers), whether the homepage and '
+                'the contribution snake are fine, and anything that needs love (like laptop changes waiting to be uploaded, '
+                'which Claude does when Rabbid asks "update my GitHub"). "say": one short excited line in character. '
+                '"alert": true only if the homepage is down or the snake is broken.',
+    },
+    {
         "key": "gearhead", "id": "crewGearhead0001", "emoji": "🔧", "title": "Gearhead · devices check",
         "model": "qwen3.5:4b", "cron": "0 9 * * *", "speak": False, "always_alert": False,
         "persona": "You are Gearhead from Rick and Morty: a gear-headed mechanic who loves machines.",
