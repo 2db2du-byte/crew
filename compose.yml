@@ -1,0 +1,22 @@
+# Rick's crew: n8n runs the crew's jobs; each job asks its own local Ollama model.
+# Started by the crew-n8n user service. Data lives on the Seagate.
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: crew-n8n
+    restart: "no"
+    network_mode: host   # reaches Ollama (11434) and the crew API (8899) on 127.0.0.1
+    environment:
+      N8N_LISTEN_ADDRESS: 127.0.0.1
+      N8N_PORT: "5678"
+      N8N_HOST: 127.0.0.1
+      N8N_SECURE_COOKIE: "false"
+      GENERIC_TIMEZONE: America/New_York
+      TZ: America/New_York
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      N8N_HIRING_BANNER_ENABLED: "false"
+    volumes:
+      - /run/media/${USER}/OmarchyExt1/ai/apps/n8n/data:/home/node/.n8n
+      - ./workflows:/workflows:ro
