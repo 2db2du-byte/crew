@@ -7,6 +7,15 @@ x-cf: &cf
   api_base: os.environ/CLOUDFLARE_AI_BASE
   api_key: os.environ/CLOUDFLARE_API_TOKEN
 
+# Added 2026-10-08. NVIDIA NIM: free, ~40 requests/min for the whole account. Ollama Cloud free plan: only gpt-oss,
+# gemma4:31b and nemotron-3-super; ONE request at a time and unpublished 5-hour/weekly limits, so it stays a backup.
+x-nim: &nim
+  api_base: https://integrate.api.nvidia.com/v1
+  api_key: os.environ/NVIDIA_NIM_API_KEY
+x-ollama-cloud: &ollamacloud
+  api_base: https://ollama.com/v1
+  api_key: os.environ/OLLAMA_API_KEY
+
 model_list:
   # ---------- free-chat: everyday answers ----------
   - model_name: free-chat
@@ -19,16 +28,25 @@ model_list:
     litellm_params: { model: openrouter/google/gemma-4-31b-it:free, api_key: os.environ/OPENROUTER_API_KEY, order: 4 }
   - model_name: free-chat
     litellm_params: { model: mistral/mistral-small-latest, api_key: os.environ/MISTRAL_API_KEY, order: 5 }
+  - model_name: free-chat
+    litellm_params: { model: openai/z-ai/glm-5.3, <<: *nim, order: 6 }
+  - model_name: free-chat
+    litellm_params: { model: openai/gpt-oss:120b, <<: *ollamacloud, order: 7 }
 
   # ---------- free-smart: "think hard" ----------
+  # 2026-10-08: Kimi K3 (NVIDIA) first: ~3 s, proper tool calls, and it saves Gemini Pro's small free daily allowance.
   - model_name: free-smart
-    litellm_params: { model: gemini/gemini-pro-latest, api_key: os.environ/GEMINI_API_KEY, order: 1 }
+    litellm_params: { model: openai/moonshotai/kimi-k3, <<: *nim, order: 1 }
   - model_name: free-smart
-    litellm_params: { model: openrouter/nvidia/nemotron-3-super-120b-a12b:free, api_key: os.environ/OPENROUTER_API_KEY, order: 2 }
+    litellm_params: { model: gemini/gemini-pro-latest, api_key: os.environ/GEMINI_API_KEY, order: 2 }
   - model_name: free-smart
-    litellm_params: { model: groq/openai/gpt-oss-120b, api_key: os.environ/GROQ_API_KEY, order: 3 }
+    litellm_params: { model: openai/z-ai/glm-5.3, <<: *nim, order: 3 }
   - model_name: free-smart
-    litellm_params: { model: openai/@cf/openai/gpt-oss-120b, <<: *cf, order: 4 }
+    litellm_params: { model: openrouter/nvidia/nemotron-3-super-120b-a12b:free, api_key: os.environ/OPENROUTER_API_KEY, order: 4 }
+  - model_name: free-smart
+    litellm_params: { model: groq/openai/gpt-oss-120b, api_key: os.environ/GROQ_API_KEY, order: 5 }
+  - model_name: free-smart
+    litellm_params: { model: openai/@cf/openai/gpt-oss-120b, <<: *cf, order: 6 }
 
   # ---------- free-coder: code ----------
   # 2026-10-07: Mistral Codestral first. It takes opencode's ~11k-token requests (instructions + tools) in ~1 s with proper
@@ -38,25 +56,33 @@ model_list:
   - model_name: free-coder
     litellm_params: { model: mistral/codestral-latest, api_key: os.environ/MISTRAL_API_KEY, order: 1 }
   - model_name: free-coder
-    litellm_params: { model: groq/openai/gpt-oss-120b, api_key: os.environ/GROQ_API_KEY, order: 2 }
+    litellm_params: { model: openai/z-ai/glm-5.3, <<: *nim, order: 2 }
   - model_name: free-coder
-    litellm_params: { model: gemini/gemini-flash-latest, api_key: os.environ/GEMINI_API_KEY, order: 3 }
+    litellm_params: { model: openai/moonshotai/kimi-k3, <<: *nim, order: 3 }
   - model_name: free-coder
-    litellm_params: { model: openrouter/poolside/laguna-s-2.1:free, api_key: os.environ/OPENROUTER_API_KEY, order: 4 }
+    litellm_params: { model: groq/openai/gpt-oss-120b, api_key: os.environ/GROQ_API_KEY, order: 4 }
   - model_name: free-coder
-    litellm_params: { model: openai/@cf/qwen/qwen2.5-coder-32b-instruct, <<: *cf, order: 5 }
+    litellm_params: { model: gemini/gemini-flash-latest, api_key: os.environ/GEMINI_API_KEY, order: 5 }
+  - model_name: free-coder
+    litellm_params: { model: openrouter/poolside/laguna-s-2.1:free, api_key: os.environ/OPENROUTER_API_KEY, order: 6 }
+  - model_name: free-coder
+    litellm_params: { model: openai/@cf/qwen/qwen2.5-coder-32b-instruct, <<: *cf, order: 7 }
 
   # ---------- free-vision: looking at pictures ----------
   - model_name: free-vision
     litellm_params: { model: gemini/gemini-flash-latest, api_key: os.environ/GEMINI_API_KEY, order: 1 }
   - model_name: free-vision
-    litellm_params: { model: openrouter/google/gemma-4-31b-it:free, api_key: os.environ/OPENROUTER_API_KEY, order: 2 }
+    litellm_params: { model: openai/gemma4:31b, <<: *ollamacloud, order: 2 }
+  - model_name: free-vision
+    litellm_params: { model: openrouter/google/gemma-4-31b-it:free, api_key: os.environ/OPENROUTER_API_KEY, order: 3 }
 
   # ---------- free-long: very long documents ----------
   - model_name: free-long
     litellm_params: { model: gemini/gemini-flash-latest, api_key: os.environ/GEMINI_API_KEY, order: 1 }
   - model_name: free-long
-    litellm_params: { model: openrouter/nvidia/nemotron-3-super-120b-a12b:free, api_key: os.environ/OPENROUTER_API_KEY, order: 2 }
+    litellm_params: { model: openai/moonshotai/kimi-k3, <<: *nim, order: 2 }
+  - model_name: free-long
+    litellm_params: { model: openrouter/nvidia/nemotron-3-super-120b-a12b:free, api_key: os.environ/OPENROUTER_API_KEY, order: 3 }
 
   # ---------- local (no internet): the laptop's own Ollama ----------
   - model_name: local-chat
