@@ -31,6 +31,14 @@ ON_DEMAND = [
         "task": '"report": 2-4 sentences on Rabbid\'s free AIs: which models are loaded, free memory, the offline library '
                 'and whether downloads are still running, the news feeds, the voice and picture helpers. '
                 '"say": one short, cool line in character. "alert": true only if Ollama or Open WebUI is down or free memory is under 1 GB.',
+    },    {
+        "key": "linus", "emoji": "🛡️", "title": "Linus · cybersecurity lesson",
+        "model": "llama3.2:3b",
+        "persona": "You are Linus van Pelt from Peanuts: calm, thoughtful, wise beyond his years, never without his security "
+                   "blanket. Rabbid's patient cybersecurity teacher.",
+        "task": '"report": 2-3 sentences: where Rabbid is in his Learn Cybersecurity course (the next step), and his '
+                'certificates and badges (earned, currently studying, next free one to go for). '
+                '"say": one or two encouraging sentences in character naming today\'s next step. "alert": false.',
     },
 ]
 
