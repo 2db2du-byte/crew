@@ -11,7 +11,7 @@ and delivers it (daily note, notification, spoken aloud).
   FreshRSS, Forgejo, Stirling PDF, LibreTranslate, Kiwix (offline library), an offline map viewer and the brain switch.
 - `apps/brain-switch/config.yaml` is a [LiteLLM](https://github.com/BerriAI/litellm) config: one OpenAI-style address
   (`127.0.0.1:4000/v1`) with jobs like `free-chat`, `free-smart`, `free-coder`. Each job tries free API tiers in order (Groq,
-  Gemini, Mistral Codestral, OpenRouter `:free`, Cloudflare Workers AI) and falls back to local [Ollama](https://ollama.com)
+  Gemini, Mistral Codestral, OpenRouter `:free`, Cloudflare Workers AI, NVIDIA NIM, Ollama Cloud) and falls back to local [Ollama](https://ollama.com)
   models when offline. Put your own keys in an env file (`GROQ_API_KEY=...`); none are included.
 
 Paths assume an external drive at `/run/media/$USER/OmarchyExt1`; change them in the compose files.
