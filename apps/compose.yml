@@ -5,7 +5,7 @@ services:
     image: ghcr.io/open-webui/open-webui:main
     container_name: app-open-webui
     network_mode: host
-    environment: { PORT: "3080", HOST: 127.0.0.1, OLLAMA_BASE_URL: "http://127.0.0.1:11434", WEBUI_NAME: "Rick's Lab", SCARF_NO_ANALYTICS: "true", DO_NOT_TRACK: "true", ANONYMIZED_TELEMETRY: "false" }
+    environment: { PORT: "3080", HOST: 127.0.0.1, OLLAMA_BASE_URL: "http://127.0.0.1:11434", WEBUI_NAME: "Ten Forward", SCARF_NO_ANALYTICS: "true", DO_NOT_TRACK: "true", ANONYMIZED_TELEMETRY: "false" }
     env_file: [ ${HOME}/AppData/open-webui.env ]   # brain switch + Auto + GPU pictures + butler voice (2026-10-15)
     volumes: [ "${HOME}/AppData/open-webui:/app/backend/data" ]
     restart: "no"
@@ -84,8 +84,9 @@ services:
     container_name: app-kiwix
     ports: [ "127.0.0.1:8090:8080" ]
     # Build the catalog book by book so one broken file is skipped instead of crashing the server (*.zim skips .part files).
-    entrypoint: [ "sh", "-c", "rm -f /tmp/lib.xml; for f in /data/*.zim; do kiwix-manage /tmp/lib.xml add \"$$f\" >/dev/null 2>&1 || echo \"skipping broken book: $$f\"; done; exec kiwix-serve --port 8080 --library /tmp/lib.xml" ]
-    volumes: [ "/mnt/storage/Offline Library/Wikipedia and more (zim files):/data:ro" ]
+    # 2026-10-20: a book with a finished speed copy on the NVMe (/fast, made by library-fast-sync) is served from there.
+    entrypoint: [ "sh", "-c", "rm -f /tmp/lib.xml; for f in /data/*.zim; do b=$${f##*/}; [ -f \"/fast/$$b\" ] && f=\"/fast/$$b\"; kiwix-manage /tmp/lib.xml add \"$$f\" >/dev/null 2>&1 || echo \"skipping broken book: $$f\"; done; exec kiwix-serve --port 8080 --threads 16 --library /tmp/lib.xml" ]
+    volumes: [ "/mnt/storage/Offline Library/Wikipedia and more (zim files):/data:ro", "${HOME}/AppData/kiwix-fast:/fast:ro" ]
     restart: "no"
 
   maps:               # Offline Maps: Project NOMAD's US state maps (OpenStreetMap), viewer in apps/maps/ (on the Seagate)
